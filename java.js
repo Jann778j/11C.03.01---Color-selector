@@ -2,41 +2,48 @@
 
 window.addEventListener("DOMContentLoaded", init);
 
-const input = document.querySelector("input");
-
 function init() {
-  console.log("starter her");
+  // console.log("starter her");
 
-  input.addEventListener("input", hentInputHer);
-  hentInputHer(input);
+  document.querySelector("input").addEventListener("input", visFarveHer);
 }
 
-function hentInputHer(input) {
-  input = document.querySelector("input");
+// denne function skal indeholde alle variabler
+function visFarveHer() {
+  console.log("vis farver her functionene");
+  const input = document.querySelector("input");
+  //her laver jeg variabler
+  const hex = hentInputHer(input.value);
+  const rgb = changeHexToRgb(hex);
+  const hsl = changeRgbToHsl(input.value);
 
-  let hexColor = input.value;
-
-  document.querySelector("#color").style.backgroundColor = `${hexColor}`;
-
-  document.querySelector("#hexcode").textContent = "HEX HERE: " + hexColor;
-
-  changeToRGB(hexColor);
+  // her kalder jeg mine functioner og (hex) tager ders parameter med
+  visHex(hex);
+  visRGB(rgb);
+  visHSL(hsl);
 }
 
-function changeToRGB(hexColor) {
-  let r = parseInt(hexColor.substring(1, 3), 16);
-  let g = parseInt(hexColor.substring(3, 5), 16);
-  let b = parseInt(hexColor.substring(5, 7), 16);
-
-  // write out the values for RGB...
-  const rgbOutput = `RGB: (${r}, ${g}, ${b})`;
-  // .. and place it into html
-  document.querySelector("#rgb").textContent = rgbOutput;
-
-  changeToHSL(r, g, b);
+//henter input og retunere det
+function hentInputHer() {
+  const input = document.querySelector("input").value;
+  return input;
 }
 
-function changeToHSL(r, g, b) {
+// konverterer hex til rgb og retunere rgb indholdet
+function changeHexToRgb(hex) {
+  let r = parseInt(hex.substring(1, 3), 16);
+  let g = parseInt(hex.substring(3, 5), 16);
+  let b = parseInt(hex.substring(5, 7), 16);
+
+  return { r, g, b };
+}
+
+// konverterer rgb til hsl (ved hjælp af lærenes kode) og retunere hsl indholdet - virker ikke (ved ikke hvorfor)
+function changeRgbToHsl(rgb) {
+  let r = rgb.r;
+  let g = rgb.g;
+  let b = rgb.b;
+
   r /= 255;
   g /= 255;
   b /= 255;
@@ -71,8 +78,31 @@ function changeToHSL(r, g, b) {
   s *= 100;
   l *= 100;
 
+  // h = Math.round(h);
+  // s = Math.round(s);
+  // l = Math.round(l);
+
   console.log("hsl(%f,%f%,%f%)", h, s, l); // just for testing
 
-  let hslOutput = `HSL: (${Math.round(h)}, ${Math.round(s)}, ${Math.round(l)})`;
-  document.querySelector("#hsl").textContent = hslOutput;
+  return { h, s, l };
+}
+
+// viser hex kode i div
+function visHex(hex) {
+  document.querySelector("#hexcode").textContent = "Hex: " + hex;
+  document.querySelector("#color").style.backgroundColor = `${hex}`;
+}
+
+// viser rgb kode i div
+function visRGB(rgb) {
+  document.querySelector(
+    "#rgb"
+  ).textContent = `RGB: ${rgb.r}, ${rgb.g}, ${rgb.b}`;
+}
+
+// burde vise hsl kode i div men den kan ikke finde værdier?!?!?
+function visHSL(hsl) {
+  document.querySelector(
+    "#hsl"
+  ).textContent = `HSL: ${hsl.h}, ${hsl.s}%, ${hsl.s}%`;
 }
